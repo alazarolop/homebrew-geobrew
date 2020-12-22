@@ -5,9 +5,11 @@ class PgsqlOgrFdw < Formula
   #sha256 "4ab0c303006bfd83dcd40af4d53c48e7d8ec7835bb98491bc6640686da788a8b"
   url "https://github.com/pramsey/pgsql-ogr-fdw.git",
     :branch => "master",
-    :commit => "6b0f4690e49ef4e0203252b2a87d25a173afc1ad"
+    :commit => "5edef96ab983ba69405fb867289cac062faf676c"
   version "1.0.12"
 
+  revision 1
+  
   depends_on "postgis"
   depends_on "gdal"
   depends_on "postgresql"
