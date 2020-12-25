@@ -61,11 +61,12 @@ class SagaGis < Formula
     cppflags = "-I#{HOMEBREW_PREFIX}/lib/wx/include/osx_cocoa-unicode-3.0 -I#{HOMEBREW_PREFIX}/include/wx-3.0 -DCMAKE_CXX_COMPILER=g++-10 -D_FILE_OFFSET_BITS=64 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__"
 
     # libs : wx-config --version=3.0 --libs
-    ldflags = "-L#{HOMEBREW_PREFIX}/lib -framework IOKit -framework Carbon -framework Cocoa -framework AudioToolbox -framework System -framework OpenGL -lwx_osx_cocoau_xrc-3.0 -lwx_osx_cocoau_html-3.0 -lwx_osx_cocoau_qa-3.0  -lwx_baseu_xml-3.0 -lwx_baseu_net-3.0 -lwx_baseu-3.0" # -lwx_osx_cocoau_adv-3.0 -lwx_osx_cocoau_core-3.0 -lwx_osx_cocoau_webview-3.0
+    ldflags = "-L#{HOMEBREW_PREFIX}/lib -framework IOKit -framework Carbon -framework Cocoa -framework AudioToolbox -framework System -framework OpenGL -lwx_osx_cocoau_xrc-3.0 -lwx_osx_cocoau_qa-3.0  -lwx_baseu_xml-3.0 -lwx_baseu_net-3.0 -lwx_baseu-3.0" # -lwx_osx_cocoau_adv-3.0 -lwx_osx_cocoau_core-3.0 -lwx_osx_cocoau_html-3.0  -lwx_osx_cocoau_webview-3.0
 
     # xcode : xcrun --show-sdk-path
-    link_misc = "-arch x86_64 -lstdc++"
     # -mmacosx-version-min=10.15 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+    link_misc = "-arch x86_64 -lstdc++"
+    
     ENV.append "CPPFLAGS", "-I#{Formula["proj"].opt_include} -I#{Formula["gdal"].opt_include} #{cppflags}"
     ENV.append "LDFLAGS", "-L#{Formula["proj"].opt_lib} -lproj -L#{Formula["gdal"].opt_lib} -lgdal #{link_misc} #{ldflags}"
 
