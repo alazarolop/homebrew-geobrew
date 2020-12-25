@@ -29,7 +29,7 @@ class SagaGis < Formula
   depends_on "hdf5"
   depends_on "proj"
   depends_on "netcdf"
-  depends_on "gdal" # (gdal-curl, gdal-filegdb, gdal-hdf4)
+  depends_on "gdal"
   depends_on "libomp"
   depends_on "postgresql" 
   
@@ -58,19 +58,19 @@ class SagaGis < Formula
 
     # cppflags : wx-config --version=3.0 --cppflags
     # defines : -D_FILE_OFFSET_BITS=64 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__
-    cppflags = "-I#{HOMEBREW_PREFIX}/lib/wx/include/osx_cocoa-unicode-3.0 -I#{HOMEBREW_PREFIX}/include/wx-3.0 -D_FILE_OFFSET_BITS=64 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__"
+    cppflags = "-I#{HOMEBREW_PREFIX}/lib/wx/include/osx_cocoa-unicode-3.0 -I#{HOMEBREW_PREFIX}/include/wx-3.0 -DCMAKE_CXX_COMPILER=g++-10 -D_FILE_OFFSET_BITS=64 -DWXUSINGDLL -D__WXMAC__ -D__WXOSX__ -D__WXOSX_COCOA__"
 
     # libs : wx-config --version=3.0 --libs
-    ldflags = "-L#{HOMEBREW_PREFIX}/lib -framework IOKit -framework Carbon -framework Cocoa -framework AudioToolbox -framework System -framework OpenGL -lwx_osx_cocoau_xrc-3.0 -lwx_osx_cocoau_html-3.0 -lwx_osx_cocoau_qa-3.0 -lwx_osx_cocoau_adv-3.0 -lwx_osx_cocoau_core-3.0 -lwx_baseu_xml-3.0 -lwx_baseu_net-3.0 -lwx_baseu-3.0" # -lwx_osx_cocoau_webview-3.0
+    ldflags = "-L#{HOMEBREW_PREFIX}/lib -framework IOKit -framework Carbon -framework Cocoa -framework AudioToolbox -framework System -framework OpenGL -lwx_osx_cocoau_xrc-3.0 -lwx_osx_cocoau_html-3.0 -lwx_osx_cocoau_qa-3.0  -lwx_baseu_xml-3.0 -lwx_baseu_net-3.0 -lwx_baseu-3.0" # -lwx_osx_cocoau_adv-3.0 -lwx_osx_cocoau_core-3.0 -lwx_osx_cocoau_webview-3.0
 
     # xcode : xcrun --show-sdk-path
-    link_misc = "-arch x86_64 -mmacosx-version-min=10.9 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -lstdc++"
-
+    link_misc = "-arch x86_64 -lstdc++"
+    # -mmacosx-version-min=10.15 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
     ENV.append "CPPFLAGS", "-I#{Formula["proj"].opt_include} -I#{Formula["gdal"].opt_include} #{cppflags}"
     ENV.append "LDFLAGS", "-L#{Formula["proj"].opt_lib} -lproj -L#{Formula["gdal"].opt_lib} -lgdal #{link_misc} #{ldflags}"
 
     # Disable narrowing warnings when compiling in C++11 mode.
-    ENV.append "CXXFLAGS", "-Wno-c++11-narrowing -std=c++11 -fopenmp"
+    ENV.append "CXXFLAGS", "-Wno-c++11-narrowing -std=c++11"
 
     ENV.append "PYTHON_VERSION", "3.8"
     ENV.append "PYTHON", "#{Formula["python@3.8"].opt_bin}/python3"
@@ -91,18 +91,15 @@ class SagaGis < Formula
       --prefix=#{prefix}
       --disable-dependency-tracking
       --disable-libfire
+      --disable-triangle
       --enable-shared
       --enable-debug
+      --enable-python
       --disable-gui 
     ]
     #--disable-openmp
     #--enable-gui
     #--enable-unicode
-
-    args << "--disable-odbc" if build.without? "unixodbc"
-    args << "--disable-triangle" # if build.with? "qhull"
-
-    args << "--enable-python" # if build.with? "python"
 
     args << "--with-postgresql=#{Formula["postgresql"].opt_bin}/pg_config" # if build.with? "postgresql"
 
