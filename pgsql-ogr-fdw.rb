@@ -5,14 +5,14 @@ class PgsqlOgrFdw < Formula
   #sha256 "4ab0c303006bfd83dcd40af4d53c48e7d8ec7835bb98491bc6640686da788a8b"
   url "https://github.com/pramsey/pgsql-ogr-fdw.git",
     :branch => "master",
-    :commit => "8130dc9e6c1b85655d510b257ab0ab0b13cd5c1f"
-  version "1.1.3"
+    :commit => "5edef96ab983ba69405fb867289cac062faf676c"
+  version "1.0.12"
 
   #revision 1
   
   depends_on "postgis"
   depends_on "gdal"
-  depends_on "postgresql@14"
+  depends_on "postgresql"
 
 
   def install
