@@ -1,8 +1,8 @@
 class R < Formula
   desc "Software environment for statistical computing"
   homepage "https://www.r-project.org/"
-  url "https://cran.r-project.org/src/base/R-4/R-4.2.3.tar.gz"
-  sha256 "55e4a9a6d43be314e2c03d0266a6fa5444afdce50b303bfc3b82b3979516e074"
+  url "https://cran.r-project.org/src/base/R-4/R-4.3.0.tar.gz"
+  sha256 "45dcc48b6cf27d361020f77fde1a39209e997b81402b3663ca1c010056a6a609"
   license "GPL-2.0-or-later"
 
   livecheck do
@@ -43,16 +43,11 @@ class R < Formula
     cause "Unknown. FIXME."
   end
 
-  # Patch to fix build on macOS Ventura, remove in next release
-  # https://bugs.r-project.org/show_bug.cgi?id=18426
-  patch do
-    on_ventura :or_newer do
-      url "https://raw.githubusercontent.com/Homebrew/formula-patches/1b1104166dc06444e691dd1b2bec3606b095e382/r/ventura.diff"
-      sha256 "de146793532e4498480014f824bf2446e02aa70206284851127561f6c37108bf"
-    end
-  end
-
   def install
+    # `configure` doesn't like curl 8+, but convince it that everything is ok.
+    # TODO: report this upstream.
+    ENV["r_cv_have_curl728"] = "yes"
+
     args = [
       "--prefix=#{prefix}",
       "--enable-memory-profiling",
@@ -124,11 +119,13 @@ class R < Formula
   end
 
   def post_install
-    short_version =
-      `#{bin}/Rscript -e 'cat(as.character(getRversion()[1,1:2]))'`.strip
-    site_library = HOMEBREW_PREFIX/"lib/R/#{short_version}/site-library"
+    short_version = Utils.safe_popen_read(bin/"Rscript", "-e", "cat(as.character(getRversion()[1,1:2]))")
+    site_library = HOMEBREW_PREFIX/"lib/R"/short_version/"site-library"
     site_library.mkpath
-    ln_s site_library, lib/"R/site-library"
+    touch site_library/".keepme"
+    site_library_cellar = lib/"R/site-library"
+    site_library_cellar.unlink if site_library_cellar.exist?
+    site_library_cellar.parent.install_symlink site_library
   end
 
   test do
