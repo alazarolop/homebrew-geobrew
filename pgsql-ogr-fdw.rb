@@ -5,8 +5,8 @@ class PgsqlOgrFdw < Formula
   #sha256 "4ab0c303006bfd83dcd40af4d53c48e7d8ec7835bb98491bc6640686da788a8b"
   url "https://github.com/pramsey/pgsql-ogr-fdw.git",
     :branch => "master",
-    :commit => "8130dc9e6c1b85655d510b257ab0ab0b13cd5c1f"
-  version "1.1.3"
+    :commit => "d217483cea4303cbbd7c59bd0381a75c4710a331"
+  version "1.1.4"
 
   #revision 1
   
@@ -32,6 +32,7 @@ class PgsqlOgrFdw < Formula
 
     # Fix bin install path
     # Use CFLAGS from environment
+    # From MakeFile https://www.pgxn.org/dist/ogr_fdw/
     config = <<~EOS
       # ogr_fdw/Makefile
 
