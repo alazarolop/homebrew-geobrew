@@ -1,8 +1,8 @@
 class PostgisAT15 < Formula
   desc "Adds support for geographic objects to PostgreSQL"
   homepage "https://postgis.net/"
-  url "https://download.osgeo.org/postgis/source/postgis-3.3.2.tar.gz"
-  sha256 "9a2a219da005a1730a39d1959a1c7cec619b1efb009b65be80ffc25bad299068"
+  url "https://download.osgeo.org/postgis/source/postgis-3.3.4.tar.gz"
+  sha256 "9d41eaef70e811a4fe2f4a431d144c0c57ce17c2c1a3c938ddaf4e5a3813b0d8"
   license "GPL-2.0-or-later"
 
   livecheck do
@@ -24,6 +24,7 @@ class PostgisAT15 < Formula
   depends_on "pkg-config" => :build
   depends_on "gdal" # for GeoJSON and raster handling
   depends_on "geos"
+  depends_on "icu4c"
   depends_on "json-c" # for GeoJSON and raster handling
   depends_on "pcre2"
   depends_on "postgresql@15"
@@ -39,6 +40,9 @@ class PostgisAT15 < Formula
 
   def install
     ENV.deparallelize
+
+    # C++17 is required.
+    ENV.append "CXXFLAGS", "-std=c++17"
 
     ENV["PG_CONFIG"] = postgresql.opt_bin/"pg_config"
 
